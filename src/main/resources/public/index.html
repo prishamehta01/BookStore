@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 BookStore Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #6c757d;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: white;
+            color: #495057;
+            border-bottom: 3px solid #007bff;
+        }
+
+        .tab:hover {
+            background: #e9ecef;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .book-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .book-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        .book-author {
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+
+        .book-details {
+            margin-bottom: 15px;
+        }
+
+        .book-details span {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .book-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .book-actions .btn {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            padding-left: 40px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .book-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📚 BookStore Management</h1>
+        <p>Manage your book inventory with ease</p>
+    </div>
+
+    <div class="main-content">
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('books')">View Books</button>
+            <button class="tab" onclick="switchTab('add')">Add Book</button>
+            <button class="tab" onclick="switchTab('search')">Search Books</button>
+        </div>
+
+        <!-- View Books Tab -->
+        <div id="books-tab" class="tab-content active">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="quick-search" placeholder="Quick search books..." oninput="filterBooks()">
+            </div>
+            <div id="books-container" class="book-grid">
+                <div class="loading">Loading books...</div>
+            </div>
+        </div>
+
+        <!-- Add Book Tab -->
+        <div id="add-tab" class="tab-content">
+            <h2>Add New Book</h2>
+            <form id="add-book-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="title">Title *</label>
+                        <input type="text" id="title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="author">Author *</label>
+                        <input type="text" id="author" name="author" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="isbn">ISBN</label>
+                        <input type="text" id="isbn" name="isbn">
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select id="category" name="category">
+                            <option value="">Select Category</option>
+                            <option value="Fiction">Fiction</option>
+                            <option value="Non-Fiction">Non-Fiction</option>
+                            <option value="Science">Science</option>
+                            <option value="Technology">Technology</option>
+                            <option value="History">History</option>
+                            <option value="Biography">Biography</option>
+                            <option value="Romance">Romance</option>
+                            <option value="Mystery">Mystery</option>
+                            <option value="Fantasy">Fantasy</option>
+                            <option value="Educational">Educational</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="price">Price *</label>
+                        <input type="number" id="price" name="price" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">Quantity *</label>
+                        <input type="number" id="quantity" name="quantity" min="0" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="4" placeholder="Book description..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Add Book</button>
+                <button type="reset" class="btn btn-secondary">Clear Form</button>
+            </form>
+        </div>
+
+        <!-- Search Books Tab -->
+        <div id="search-tab" class="tab-content">
+            <h2>Advanced Search</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="search-title">Title</label>
+                    <input type="text" id="search-title" placeholder="Search by title...">
+                </div>
+                <div class="form-group">
+                    <label for="search-author">Author</label>
+                    <input type="text" id="search-author" placeholder="Search by author...">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="search-category">Category</label>
+                    <select id="search-category">
+                        <option value="">All Categories</option>
+                        <option value="Fiction">Fiction</option>
+                        <option value="Non-Fiction">Non-Fiction</option>
+                        <option value="Science">Science</option>
+                        <option value="Technology">Technology</option>
+                        <option value="History">History</option>
+                        <option value="Biography">Biography</option>
+                        <option value="Romance">Romance</option>
+                        <option value="Mystery">Mystery</option>
+                        <option value="Fantasy">Fantasy</option>
+                        <option value="Educational">Educational</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="search-isbn">ISBN</label>
+                    <input type="text" id="search-isbn" placeholder="Search by ISBN...">
+                </div>
+            </div>
+            <button onclick="searchBooks()" class="btn btn-primary">Search</button>
+            <button onclick="clearSearch()" class="btn btn-secondary">Clear</button>
+
+            <div id="search-results" class="book-grid" style="margin-top: 30px;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Book Modal (Hidden by default) -->
+<div id="edit-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;">
+        <h2>Edit Book</h2>
+        <form id="edit-book-form">
+            <input type="hidden" id="edit-id">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="edit-title">Title *</label>
+                    <input type="text" id="edit-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-author">Author *</label>
+                    <input type="text" id="edit-author" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="edit-isbn">ISBN</label>
+                    <input type="text" id="edit-isbn">
+                </div>
+                <div class="form-group">
+                    <label for="edit-category">Category</label>
+                    <select id="edit-category">
+                        <option value="">Select Category</option>
+                        <option value="Fiction">Fiction</option>
+                        <option value="Non-Fiction">Non-Fiction</option>
+                        <option value="Science">Science</option>
+                        <option value="Technology">Technology</option>
+                        <option value="History">History</option>
+                        <option value="Biography">Biography</option>
+                        <option value="Romance">Romance</option>
+                        <option value="Mystery">Mystery</option>
+                        <option value="Fantasy">Fantasy</option>
+                        <option value="Educational">Educational</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="edit-price">Price *</label>
+                    <input type="number" id="edit-price" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-quantity">Quantity *</label>
+                    <input type="number" id="edit-quantity" min="0" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="edit-description">Description</label>
+                <textarea id="edit-description" rows="4"></textarea>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button type="submit" class="btn btn-primary">Update Book</button>
+                <button type="button" onclick="closeEditModal()" class="btn btn-secondary">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const API_BASE = 'http://localhost:8080/api';
+    let allBooks = [];
+
+    // Initialize the application
+    document.addEventListener('DOMContentLoaded', function() {
+        loadBooks();
+        setupEventListeners();
+    });
+
+    function setupEventListeners() {
+        // Add book form submission
+        document.getElementById('add-book-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            addBook();
+        });
+
+        // Edit book form submission
+        document.getElementById('edit-book-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            updateBook();
+        });
+    }
+
+    // Tab switching
+    function switchTab(tabName) {
+        // Hide all tab contents
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+
+        // Remove active class from all tabs
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+
+        // Show selected tab content
+        document.getElementById(tabName + '-tab').classList.add('active');
+
+        // Add active class to selected tab
+        event.target.classList.add('active');
+    }
+
+    // Load all books
+    async function loadBooks() {
+        try {
+            const response = await fetch(`${API_BASE}/books`);
+            if (!response.ok) throw new Error('Failed to load books');
+
+            allBooks = await response.json();
+            displayBooks(allBooks);
+        } catch (error) {
+            showError('Failed to load books: ' + error.message);
+            document.getElementById('books-container').innerHTML = '<div class="alert alert-error">Failed to load books</div>';
+        }
+    }
+
+    // Display books in the grid
+    function displayBooks(books) {
+        const container = document.getElementById('books-container');
+
+        if (books.length === 0) {
+            container.innerHTML = '<div class="loading">No books found</div>';
+            return;
+        }
+
+        container.innerHTML = books.map(book => `
+            <div class="book-card">
+                <div class="book-title">${escapeHtml(book.title)}</div>
+                <div class="book-author">by ${escapeHtml(book.author)}</div>
+                <div class="book-details">
+                    <span><strong>Price:</strong> $${book.price}</span>
+                    <span><strong>Quantity:</strong> ${book.quantity}</span>
+                    ${book.category ? `<span><strong>Category:</strong> ${escapeHtml(book.category)}</span>` : ''}
+                    ${book.isbn ? `<span><strong>ISBN:</strong> ${escapeHtml(book.isbn)}</span>` : ''}
+                    ${book.description ? `<span><strong>Description:</strong> ${escapeHtml(book.description.substring(0, 100))}${book.description.length > 100 ? '...' : ''}</span>` : ''}
+                </div>
+                <div class="book-actions">
+                    <button class="btn btn-primary" onclick="editBook(${book.id})">Edit</button>
+                    <button class="btn btn-danger" onclick="deleteBook(${book.id})">Delete</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Add new book
+    async function addBook() {
+        const formData = new FormData(document.getElementById('add-book-form'));
+        const bookData = {
+            title: formData.get('title'),
+            author: formData.get('author'),
+            isbn: formData.get('isbn'),
+            price: parseFloat(formData.get('price')),
+            quantity: parseInt(formData.get('quantity')),
+            description: formData.get('description'),
+            category: formData.get('category')
+        };
+
+        try {
+            const response = await fetch(`${API_BASE}/books`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(bookData)
+            });
+
+            if (!response.ok) throw new Error('Failed to add book');
+
+            showSuccess('Book added successfully!');
+            document.getElementById('add-book-form').reset();
+            loadBooks(); // Refresh the book list
+            switchTab('books'); // Switch to books tab
+        } catch (error) {
+            showError('Failed to add book: ' + error.message);
+        }
+    }
+
+    // Edit book
+    function editBook(id) {
+        const book = allBooks.find(b => b.id === id);
+        if (!book) return;
+
+        // Populate the edit form
+        document.getElementById('edit-id').value = book.id;
+        document.getElementById('edit-title').value = book.title;
+        document.getElementById('edit-author').value = book.author;
+        document.getElementById('edit-isbn').value = book.isbn || '';
+        document.getElementById('edit-category').value = book.category || '';
+        document.getElementById('edit-price').value = book.price;
+        document.getElementById('edit-quantity').value = book.quantity;
+        document.getElementById('edit-description').value = book.description || '';
+
+        // Show the modal
+        document.getElementById('edit-modal').style.display = 'block';
+    }
+
+    // Update book
+    async function updateBook() {
+        const id = document.getElementById('edit-id').value;
+        const bookData = {
+            title: document.getElementById('edit-title').value,
+            author: document.getElementById('edit-author').value,
+            isbn: document.getElementById('edit-isbn').value,
+            price: parseFloat(document.getElementById('edit-price').value),
+            quantity: parseInt(document.getElementById('edit-quantity').value),
+            description: document.getElementById('edit-description').value,
+            category: document.getElementById('edit-category').value
+        };
+
+        try {
+            const response = await fetch(`${API_BASE}/books/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(bookData)
+            });
+
+            if (!response.ok) throw new Error('Failed to update book');
+
+            showSuccess('Book updated successfully!');
+            closeEditModal();
+            loadBooks(); // Refresh the book list
+        } catch (error) {
+            showError('Failed to update book: ' + error.message);
+        }
+    }
+
+    // Delete book
+    async function deleteBook(id) {
+        if (!confirm('Are you sure you want to delete this book?')) return;
+
+        try {
+            const response = await fetch(`${API_BASE}/books/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) throw new Error('Failed to delete book');
+
+            showSuccess('Book deleted successfully!');
+            loadBooks(); // Refresh the book list
+        } catch (error) {
+            showError('Failed to delete book: ' + error.message);
+        }
+    }
+
+    // Close edit modal
+    function closeEditModal() {
+        document.getElementById('edit-modal').style.display = 'none';
+    }
+
+    // Filter books (quick search)
+    function filterBooks() {
+        const searchTerm = document.getElementById('quick-search').value.toLowerCase();
+        const filteredBooks = allBooks.filter(book =>
+            book.title.toLowerCase().includes(searchTerm) ||
+            book.author.toLowerCase().includes(searchTerm) ||
+            (book.category && book.category.toLowerCase().includes(searchTerm)) ||
+            (book.isbn && book.isbn.toLowerCase().includes(searchTerm))
+        );
+        displayBooks(filteredBooks);
+    }
+
+    // Advanced search
+    function searchBooks() {
+        const title = document.getElementById('search-title').value.toLowerCase();
+        const author = document.getElementById('search-author').value.toLowerCase();
+        const category = document.getElementById('search-category').value;
+        const isbn = document.getElementById('search-isbn').value.toLowerCase();
+
+        const filteredBooks = allBooks.filter(book => {
+            return (!title || book.title.toLowerCase().includes(title)) &&
+                   (!author || book.author.toLowerCase().includes(author)) &&
+                   (!category || book.category === category) &&
+                   (!isbn || (book.isbn && book.isbn.toLowerCase().includes(isbn)));
+        });
+
+        document.getElementById('search-results').innerHTML = '';
+        if (filteredBooks.length === 0) {
+            document.getElementById('search-results').innerHTML = '<div class="loading">No books found matching your criteria</div>';
+        } else {
+            document.getElementById('search-results').innerHTML = filteredBooks.map(book => `
+                <div class="book-card">
+                    <div class="book-title">${escapeHtml(book.title)}</div>
+                    <div class="book-author">by ${escapeHtml(book.author)}</div>
+                    <div class="book-details">
+                        <span><strong>Price:</strong> $${book.price}</span>
+                        <span><strong>Quantity:</strong> ${book.quantity}</span>
+                        ${book.category ? `<span><strong>Category:</strong> ${escapeHtml(book.category)}</span>` : ''}
+                        ${book.isbn ? `<span><strong>ISBN:</strong> ${escapeHtml(book.isbn)}</span>` : ''}
+                    </div>
+                    <div class="book-actions">
+                        <button class="btn btn-primary" onclick="editBook(${book.id})">Edit</button>
+                        <button class="btn btn-danger" onclick="deleteBook(${book.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+    }
+
+    // Clear search
+    function clearSearch() {
+        document.getElementById('search-title').value = '';
+        document.getElementById('search-author').value = '';
+        document.getElementById('search-category').value = '';
+        document.getElementById('search-isbn').value = '';
+        document.getElementById('search-results').innerHTML = '';
+    }
+
+    // Utility functions
+    function showSuccess(message) {
+        showAlert(message, 'success');
+    }
+
+    function showError(message) {
+        showAlert(message, 'error');
+    }
+
+    function showAlert(message, type) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type}`;
+        alertDiv.textContent = message;
+
+        const container = document.querySelector('.tab-content.active');
+        container.insertBefore(alertDiv, container.firstChild);
+
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 5000);
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('edit-modal');
+        if (event.target === modal) {
+            closeEditModal();
+        }
+    }
+</script>
+</body>
+</html>
