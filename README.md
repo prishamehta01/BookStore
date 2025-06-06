@@ -19,7 +19,7 @@ A full-stack BookStore web app built using Java (Spark Framework), JDBC, MySQL, 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/BookStore.git
+git clone https://github.com/prishamehta01/BookStore.git
 cd BookStore
 ```
 
@@ -78,15 +78,16 @@ private static final String PASSWORD = "your_password";
 
 ## 📸 Screenshots
 
-> You can add screenshots of your web app here in a folder called `screenshots/` and link them like this:
+
+![BookStore](Screenshot/Screenshot1.png)
+![BookStore](Screenshot/Screenshot2.png)
+![BookStore](Screenshot/Screenshot3.png)
+
 
 ### 🔍 Home Page
 
-![Home Page](screenshots/homepage.png)
+![BookStore](Screenshot/Screenshot4.png)
 
-### 📖 Add Book Form
-
-![Add Book](screenshots/add-book.png)
 
 ---
 
