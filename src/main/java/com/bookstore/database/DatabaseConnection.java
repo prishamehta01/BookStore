@@ -10,8 +10,8 @@ import java.sql.Statement;
  */
 public class DatabaseConnection {
     private static final String URL = "jdbc:mysql://localhost:3306/bookstore_db";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "prisha@2005";
+    private static final String USERNAME = "bookstore_user";
+    private static final String PASSWORD = "book123";
 
     private static Connection connection = null;
 
